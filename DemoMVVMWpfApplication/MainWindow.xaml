@@ -1,0 +1,72 @@
+﻿<Window x:Class="DemoMVVMWpfApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DemoMVVMWpfApplication"
+        xmlns:viewModels="clr-namespace:DemoMVVMWpfApplication.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        SizeToContent="WidthAndHeight"
+        >
+    <Window.DataContext>
+        <viewModels:MainViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
+    </Window.Resources>
+    <StackPanel>
+        <Grid Width="Auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <ListBox ItemsSource="{Binding InfoPanels, Mode=OneWay}"
+                     >
+                    <ListBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <CheckBox Content="{Binding Header, Mode=OneWay}"
+                              IsChecked="{Binding IsVisible, Mode=TwoWay}"
+                              Style="{StaticResource CheckBoxStyle}"
+                              />
+                        </ItemContainerTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <ListBox ItemsSource="{Binding InfoPanels, Mode=OneWay}"
+                     Width="Auto"
+                     SelectionMode="Single"
+                     >
+                    <ListBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="{Binding Header, Mode=OneWay}"
+                                       Visibility="{Binding IsVisible, Mode=OneWay, Converter={StaticResource boolToVisibilityConverter}}"
+                                       Width="100"
+                                       />
+                                <ListBox ItemsSource="{Binding Infos, Mode=OneWay}"
+                                         Visibility="{Binding IsVisible, Mode=OneWay, Converter={StaticResource boolToVisibilityConverter}}"
+                                         >
+                                    <ListBox.ItemTemplate>
+                                        <ItemContainerTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding ParameterName, Mode=OneWay}" />
+                                                <Label Content="{Binding Value, Mode=OneWay}" />
+                                            </StackPanel>
+                                        </ItemContainerTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </ItemContainerTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+            </Grid>
+
+        </Grid>
+    </StackPanel>
+</Window>
